@@ -6,7 +6,7 @@ on:
       destroy:
         description: 'Destruir infraestrutura?'
         required: true
-        default: 'true'
+        default: 'false'
 
 permissions:
   id-token: write
@@ -17,8 +17,6 @@ jobs:
     if: ${{ github.event.inputs.destroy == 'false' }}
     name: 🔎 Validar Terraform
     runs-on: ubuntu-latest
-    env:
-      ANSIBLE_HOST_KEY_CHECKING: false
       
     steps:
       - name: Checkout do código
@@ -100,6 +98,7 @@ jobs:
 
       - name: Executar Playbook Ansible
         run: |
+          ANSIBLE_HOST_KEY_CHECKING=False
           ansible-playbook -i inventory ansible/playbook.yml --extra-vars "ansible_sudo_pass=${{ secrets.ADMIN_PASSWORD }}"
 
   post-tests:
