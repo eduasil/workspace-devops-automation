@@ -100,7 +100,7 @@ jobs:
         env:
           ANSIBLE_HOST_KEY_CHECKING: "False"
         run: |
-          ansible-playbook -i inventory ansible/playbook.yml --extra-vars "ansible_sudo_pass=${{ secrets.ADMIN_PASSWORD }}" --ssh-extra-args="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+          ansible-playbook -i inventory ansible/playbook.yml --extra-vars "ansible_user=${{ env.ADMIN_USERNAME }} ansible_sudo_pass=${{ secrets.ADMIN_PASSWORD }}" --ssh-extra-args="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
 
   post-tests:
     if: ${{ github.event.inputs.destroy == 'false' }}
