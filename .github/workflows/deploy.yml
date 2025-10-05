@@ -1,11 +1,12 @@
 name: Deploy Terraform to Azure
 
 on:
-  push:
-    branches:
-      - main
-env:
-  destroy: true
+  workflow_dispatch:
+    inputs:
+      destroy:
+        description: 'Destruir infraestrutura?'
+        required: true
+        default: 'true'
 
 permissions:
   id-token: write
@@ -18,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ANSIBLE_HOST_KEY_CHECKING: false
-
+      
     steps:
       - name: Checkout do código
         uses: actions/checkout@v3
