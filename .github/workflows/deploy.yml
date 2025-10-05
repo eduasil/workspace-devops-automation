@@ -89,16 +89,14 @@ jobs:
       - name: Instalar Ansible e sshpass
         run: |
           sudo apt-get update
-          sudo apt-get install -y ansible sshpass
+          sudo apt-get install -y ansible
+          sudo apt-get install -y sshpass
 
-      - name: Remover chave SSH padrão (opcional)
-        run: |
-          rm -f ~/.ssh/id_rsa
 
       - name: Criar Inventário Ansible
         run: |
           echo "[vm]" > inventory
-          echo "${{ env.PUBLIC_IP }} ansible_user=${{ env.ADMIN_USERNAME }} ansible_password=${{ secrets.ADMIN_PASSWORD }} ansible_connection=ssh ansible_ssh_common_args='-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'" >> inventory
+          echo "${{ env.PUBLIC_IP }} ansible_user=${{ env.ADMIN_USERNAME }} ansible_password=${{ secrets.ADMIN_PASSWORD }} ansible_connection=ssh -o StrictHostKeyChecking=no'" >> inventory
 
       - name: Testar conexão SSH com Ansible
         env:
