@@ -137,7 +137,7 @@ jobs:
           status=$(az vm get-instance-view \
             --name "$VM_NAME" \
             --resource-group "$RESOURCE_GROUP" \
-            --query "instanceView.statuses[?code=='PowerState/running'].displayStatus" \
+            --query "instanceView.statuse s[?code=='PowerState/running'].displayStatus" \
             --output tsv)
 
           echo "Status da VM: $status"
@@ -185,4 +185,4 @@ jobs:
         working-directory: infra
         run: |
           terraform init
-          terraform destroy -auto-approve
+          terraform destroy -auto-approve -lock=false
