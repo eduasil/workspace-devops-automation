@@ -98,17 +98,13 @@ jobs:
       - name: Criar Inventário Ansible
         run: |
           echo "[vm]" > inventory
-          echo "${{ env.PUBLIC_IP }} ansible_user=${{ env.ADMIN_USERNAME }} ansible_password=${{ secrets.ADMIN_PASSWORD }} ansible_connection=ssh ansible_ssh_common_args='-o StrictHostKeyChecking=no'" >> inventory
+          echo "${{ env.PUBLIC_IP }} ansible_user=${{ env.ADMIN_USERNAME }} ansible_password=${{ secrets.ADMIN_PASSWORD }} ansible_connection=ssh ansible_ssh_common_args='-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'" >> inventory
 
       - name: Testar conexão SSH com Ansible
-        run: |
-          ansible all -i inventory -m ping
-
-      - name: Executar Playbook Ansible
         env:
           ANSIBLE_HOST_KEY_CHECKING: "False"
         run: |
-          ansible-playbook -i inventory ansible/playbook.yml --extra-vars "ansible_sudo_pass=${{ secrets.ADMIN_PASSWORD }}"
+          ansible all -i inventory -m ping
 
   post-tests:
     if: ${{ github.event.inputs.destroy == 'false' }}
