@@ -91,10 +91,18 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ansible sshpass
 
+      - name: Remover chave SSH padrão (opcional)
+        run: |
+          rm -f ~/.ssh/id_rsa
+
       - name: Criar Inventário Ansible
         run: |
           echo "[vm]" > inventory
-          echo "${{ env.PUBLIC_IP }} ansible_user=azureuser ansible_password=12#qweasdzxC ansible_connection=ssh ansible_ssh_common_args='-o StrictHostKeyChecking=no'" >> inventory
+          echo "${{ env.PUBLIC_IP }} ansible_user=${{ env.ADMIN_USERNAME }} ansible_password=${{ secrets.ADMIN_PASSWORD }} ansible_connection=ssh ansible_ssh_common_args='-o StrictHostKeyChecking=no'" >> inventory
+
+      - name: Testar conexão SSH com Ansible
+        run: |
+          ansible all -i inventory -m ping
 
       - name: Executar Playbook Ansible
         env:
